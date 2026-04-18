@@ -4,6 +4,44 @@
 <meta charset="UTF-8">
 <title>Amani Portfolio</title>
 <link rel="stylesheet" href="style.css">
+
+<style>
+/* ===== Labs Section ===== */
+.labs{
+    margin-top:30px;
+}
+
+#labsTitle{
+    cursor:pointer;
+    background:#222;
+    color:white;
+    padding:10px;
+    width:200px;
+    border-radius:6px;
+    display:inline-block;
+}
+
+.hidden{
+    display:none;
+}
+
+#labsList ul{
+    list-style:none;
+    padding:0;
+    margin-top:10px;
+}
+
+#labsList li{
+    margin:5px 0;
+}
+
+#labsList a{
+    text-decoration:none;
+    color:#0077ff;
+    font-weight:bold;
+}
+</style>
+
 </head>
 
 <body>
@@ -38,6 +76,23 @@ web applications.
 
 </section>
 
+<!-- ===== LABS SECTION ===== -->
+<section class="labs">
+
+<h2 id="labsTitle">Labs ▼</h2>
+
+<div id="labsList" class="hidden">
+<ul>
+<li><a href="Lab2.html">Lab 2</a></li>
+<li><a href="Lab3.html">Lab 3</a></li>
+<li><a href="Lab4.html">Lab 4</a></li>
+<li><a href="Lab5.html">Lab 5</a></li>
+<li><a href="Lab6.html">Lab 6</a></li>
+</ul>
+</div>
+
+</section>
+
 <h2>Contact Info</h2>
 
 <p>Email: <a href="mailto:Amanian128@email.com">amaniab128@gmail.com</a></p>
@@ -58,6 +113,21 @@ web applications.
 <footer>
 <p>© 2026 Amani</p>
 </footer>
+
+<script>
+const title = document.getElementById("labsTitle");
+const list = document.getElementById("labsList");
+
+title.addEventListener("click", function(){
+    list.classList.toggle("hidden");
+
+    if(list.classList.contains("hidden")){
+        title.innerHTML = "Labs ▼";
+    } else {
+        title.innerHTML = "Labs ▲";
+    }
+});
+</script>
 
 </body>
 </html>
