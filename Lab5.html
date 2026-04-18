@@ -3,132 +3,195 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Amani Portfolio</title>
-<link rel="stylesheet" href="style.css">
+<title>NBA Player Stats Dashboard</title>
 
 <style>
-/* ===== Labs Section ===== */
-.labs{
-    margin-top:30px;
+body{
+    font-family: Arial, sans-serif;
+    margin:20px;
+    background:#f4f4f4;
+    transition:0.3s;
 }
 
-#labsTitle{
-    cursor:pointer;
+.container{
+    max-width:900px;
+    margin:auto;
+}
+
+h1{
+    text-align:center;
+}
+
+/* Controls */
+.controls{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+}
+
+input, select, button{
+    padding:10px;
+    font-size:16px;
+}
+
+/* Table */
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+}
+
+th, td{
+    padding:12px;
+    border:1px solid #ddd;
+    text-align:center;
+}
+
+th{
     background:#222;
     color:white;
-    padding:10px;
-    width:200px;
-    border-radius:6px;
-    display:inline-block;
+    cursor:pointer;
 }
 
-.hidden{
-    display:none;
+tr:hover{
+    background:#f1f1f1;
 }
 
-#labsList ul{
-    list-style:none;
-    padding:0;
-    margin-top:10px;
+/* Dark Mode */
+.dark{
+    background:#121212;
+    color:white;
 }
 
-#labsList li{
-    margin:5px 0;
+.dark table{
+    background:#1e1e1e;
+    color:white;
 }
 
-#labsList a{
-    text-decoration:none;
-    color:#0077ff;
-    font-weight:bold;
+.dark th{
+    background:#333;
 }
 </style>
-
 </head>
 
 <body>
 
-<header>
-<nav>
-<img src="profile.jpg" class="profile-pic">
+<div class="container">
 
-<ul>
-<li><a href="index.html">Home</a></li>
-<li><a href="schedule.html">Schedule</a></li>
-<li><a href="contact.html">Contact</a></li>
-</ul>
-</nav>
-</header>
+<h1>NBA Player Stats Dashboard</h1>
 
-<main>
+<!-- CONTROLS -->
+<div class="controls">
+<input type="text" id="search" placeholder="Search player...">
 
-<h1>Amani Portfolio</h1>
-<p>CPIT-405 Student</p>
+<select id="teamFilter">
+<option value="all">All Teams</option>
+<option value="Lakers">Lakers</option>
+<option value="Warriors">Warriors</option>
+<option value="Bucks">Bucks</option>
+<option value="Mavericks">Mavericks</option>
+</select>
 
-<a class="fragment-link" href="#about">Go to About Me</a>
-
-<section id="about">
-<h2>About Me</h2>
-
-<p class="about-text">
-I am an Information Technology student at King Abdulaziz University.
-I am currently learning web development, HTML, CSS, and building modern
-web applications.
-</p>
-
-</section>
-
-<!-- ===== LABS SECTION ===== -->
-<section class="labs">
-
-<h2 id="labsTitle">Labs ▼</h2>
-
-<div id="labsList" class="hidden">
-<ul>
-<li><a href="lab1/index.html">Lab 1</a></li>
-<li><a href="lab2/index.html">Lab 2</a></li>
-<li><a href="lab3/index.html">Lab 3</a></li>
-<li><a href="lab4/index.html">Lab 4</a></li>
-<li><a href="lab5/index.html">Lab 5</a></li>
-<li><a href="lab6/index.html">Lab 6</a></li>
-</ul>
+<button id="darkBtn">Dark Mode</button>
 </div>
 
-</section>
+<!-- TABLE -->
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Team</th>
+<th id="pointsSort">Points ▲▼</th>
+<th>Assists</th>
+<th>Rebounds</th>
+</tr>
+</thead>
 
-<h2>Contact Info</h2>
+<tbody id="tableBody"></tbody>
+</table>
 
-<p>Email: <a href="mailto:Amanian128@email.com">amaniab128@gmail.com</a></p>
-<p>Phone: <a href="tel:+966500000000">+966544125832</a></p>
-
-<h2>Social Media</h2>
-
-<a href="https://x.com/amani_it1?s=21" target="_blank">
-<img src="x.png" class="icon">
-</a>
-
-<a href="https://www.linkedin.com/in/amani-abdullah-91aa3a343" target="_blank">
-<img src="linkedin.png" class="icon">
-</a>
-
-</main>
-
-<footer>
-<p>© 2026 Amani</p>
-</footer>
+</div>
 
 <script>
-const title = document.getElementById("labsTitle");
-const list = document.getElementById("labsList");
 
-title.addEventListener("click", function(){
-    list.classList.toggle("hidden");
+/* ================= DATA ================= */
+const players = [
+{name:"LeBron James", team:"Lakers", points:27, assists:7, rebounds:8},
+{name:"Stephen Curry", team:"Warriors", points:30, assists:6, rebounds:5},
+{name:"Giannis Antetokounmpo", team:"Bucks", points:29, assists:5, rebounds:11},
+{name:"Luka Doncic", team:"Mavericks", points:32, assists:8, rebounds:9},
+{name:"Anthony Davis", team:"Lakers", points:24, assists:3, rebounds:10},
+{name:"Klay Thompson", team:"Warriors", points:21, assists:2, rebounds:4}
+];
 
-    if(list.classList.contains("hidden")){
-        title.innerHTML = "Labs ▼";
-    } else {
-        title.innerHTML = "Labs ▲";
-    }
+let currentData = [...players];
+let ascending = true;
+
+/* ================= DISPLAY ================= */
+function displayPlayers(data){
+    const tableBody = document.getElementById("tableBody");
+    tableBody.innerHTML = "";
+
+    data.forEach(player=>{
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${player.name}</td>
+            <td>${player.team}</td>
+            <td>${player.points}</td>
+            <td>${player.assists}</td>
+            <td>${player.rebounds}</td>
+        `;
+
+        tableBody.appendChild(row);
+    });
+}
+
+displayPlayers(currentData);
+
+/* ================= SEARCH ================= */
+document.getElementById("search").addEventListener("input", function(){
+    const keyword = this.value.toLowerCase();
+
+    currentData = players.filter(p =>
+        p.name.toLowerCase().includes(keyword)
+    );
+
+    displayPlayers(currentData);
 });
+
+/* ================= FILTER ================= */
+document.getElementById("teamFilter").addEventListener("change", function(){
+
+    const team = this.value;
+
+    if(team === "all"){
+        currentData = [...players];
+    } else {
+        currentData = players.filter(p => p.team === team);
+    }
+
+    displayPlayers(currentData);
+});
+
+/* ================= DARK MODE ================= */
+document.getElementById("darkBtn").addEventListener("click", function(){
+    document.body.classList.toggle("dark");
+});
+
+/* ================= SORT ================= */
+document.getElementById("pointsSort").addEventListener("click", function(){
+
+    currentData.sort((a,b)=>
+        ascending ? a.points - b.points : b.points - a.points
+    );
+
+    ascending = !ascending;
+
+    displayPlayers(currentData);
+});
+
 </script>
 <a href="index.html">⬅ Back to Portfolio</a>
 </body>
