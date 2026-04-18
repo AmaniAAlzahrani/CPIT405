@@ -3,238 +3,133 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Like System</title>
+<title>Amani Portfolio</title>
+<link rel="stylesheet" href="style.css">
 
 <style>
-body{
-    font-family: "Segoe UI", sans-serif;
-    background: linear-gradient(135deg,#eef2ff,#f8fafc);
-    margin:0;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
+/* ===== Labs Section ===== */
+.labs{
+    margin-top:30px;
 }
 
-.container{
-    background:white;
-    padding:30px;
-    border-radius:16px;
-    width:420px;
-    box-shadow:0 15px 40px rgba(0,0,0,0.1);
-    text-align:center;
-}
-
-.buttons{
-    display:flex;
-    justify-content:center;
-    gap:15px;
-}
-
-button{
-    border:none;
-    padding:10px 18px;
-    border-radius:10px;
+#labsTitle{
     cursor:pointer;
-    font-size:14px;
-    transition:0.2s;
-}
-
-button:hover{
-    transform:scale(1.05);
-}
-
-#likeBtn{
-    background:#dcfce7;
-    color:#166534;
-}
-
-#dislikeBtn{
-    background:#fee2e2;
-    color:#991b1b;
-}
-
-#resetBtn{
-    background:#111;
+    background:#222;
     color:white;
-    margin-top:15px;
-}
-
-.input-area{
-    display:flex;
-    gap:10px;
-    margin-top:10px;
-}
-
-input{
-    flex:1;
     padding:10px;
-    border:1px solid #ddd;
-    border-radius:8px;
+    width:200px;
+    border-radius:6px;
+    display:inline-block;
 }
 
-#commentBtn{
-    background:#6366f1;
-    color:white;
+.hidden{
+    display:none;
 }
 
-#comments{
+#labsList ul{
+    list-style:none;
+    padding:0;
     margin-top:10px;
-    text-align:left;
 }
 
-.comment-box{
-    background:#f1f5f9;
-    padding:10px;
-    border-radius:10px;
-    margin-top:10px;
-    font-size:14px;
+#labsList li{
+    margin:5px 0;
 }
 
-.back-link{
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    text-decoration: none;
-    color: #4f46e5;
-    font-weight: bold;
-}
-
-.back-link:hover{
-    text-decoration: underline;
+#labsList a{
+    text-decoration:none;
+    color:#0077ff;
+    font-weight:bold;
 }
 </style>
+
 </head>
 
 <body>
 
-<div class="container">
+<header>
+<nav>
+<img src="profile.jpg" class="profile-pic">
 
-<h2>👍 Like / 👎 Dislike</h2>
+<ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="schedule.html">Schedule</a></li>
+<li><a href="contact.html">Contact</a></li>
+</ul>
+</nav>
+</header>
 
-<div class="buttons">
-    <button id="likeBtn">👍 <span id="likeCount">0</span></button>
-    <button id="dislikeBtn">👎 <span id="dislikeCount">0</span></button>
+<main>
+
+<h1>Amani Portfolio</h1>
+<p>CPIT-405 Student</p>
+
+<a class="fragment-link" href="#about">Go to About Me</a>
+
+<section id="about">
+<h2>About Me</h2>
+
+<p class="about-text">
+I am an Information Technology student at King Abdulaziz University.
+I am currently learning web development, HTML, CSS, and building modern
+web applications.
+</p>
+
+</section>
+
+<!-- ===== LABS SECTION ===== -->
+<section class="labs">
+
+<h2 id="labsTitle">Labs ▼</h2>
+
+<div id="labsList" class="hidden">
+<ul>
+<li><a href="lab1/index.html">Lab 1</a></li>
+<li><a href="lab2/index.html">Lab 2</a></li>
+<li><a href="lab3/index.html">Lab 3</a></li>
+<li><a href="lab4/index.html">Lab 4</a></li>
+<li><a href="lab5/index.html">Lab 5</a></li>
+<li><a href="lab6/index.html">Lab 6</a></li>
+</ul>
 </div>
 
-<h3 style="margin-top:20px;">Comments</h3>
+</section>
 
-<div class="input-area">
-    <input type="text" id="commentInput" placeholder="Write a comment...">
-    <button id="commentBtn" type="button">Send</button>
-</div>
+<h2>Contact Info</h2>
 
-<div id="comments"></div>
+<p>Email: <a href="mailto:Amanian128@email.com">amaniab128@gmail.com</a></p>
+<p>Phone: <a href="tel:+966500000000">+966544125832</a></p>
 
-<button id="resetBtn">Reset</button>
+<h2>Social Media</h2>
 
-</div>
+<a href="https://x.com/amani_it1?s=21" target="_blank">
+<img src="x.png" class="icon">
+</a>
 
-<a href="index.html" class="back-link">⬅ Back to Portfolio</a>
+<a href="https://www.linkedin.com/in/amani-abdullah-91aa3a343" target="_blank">
+<img src="linkedin.png" class="icon">
+</a>
+
+</main>
+
+<footer>
+<p>© 2026 Amani</p>
+</footer>
 
 <script>
+const title = document.getElementById("labsTitle");
+const list = document.getElementById("labsList");
 
-/* ===== STORAGE ===== */
-let likeCount = parseInt(localStorage.getItem("like")) || 0;
-let dislikeCount = parseInt(localStorage.getItem("dislike")) || 0;
-let comments = JSON.parse(localStorage.getItem("comments")) || [];
-let vote = localStorage.getItem("vote"); // like / dislike
+title.addEventListener("click", function(){
+    list.classList.toggle("hidden");
 
-/* ===== INIT ===== */
-document.getElementById("likeCount").innerText = likeCount;
-document.getElementById("dislikeCount").innerText = dislikeCount;
-
-/* ===== RENDER COMMENTS ===== */
-function renderComments(){
-    const box = document.getElementById("comments");
-    box.innerHTML = "";
-
-    comments.forEach(c=>{
-        let div = document.createElement("div");
-        div.className = "comment-box";
-        div.innerHTML = `<b>${c.text}</b><br><small>${c.time}</small>`;
-        box.appendChild(div);
-    });
-}
-
-renderComments();
-
-/* ===== LIKE ===== */
-document.getElementById("likeBtn").onclick = ()=>{
-
-    if(vote === "like"){
-        return alert("You already liked!");
+    if(list.classList.contains("hidden")){
+        title.innerHTML = "Labs ▼";
+    } else {
+        title.innerHTML = "Labs ▲";
     }
-
-    if(vote === "dislike"){
-        return alert("You already disliked! Press Reset to change.");
-    }
-
-    likeCount++;
-    localStorage.setItem("like", likeCount);
-
-    vote = "like";
-    localStorage.setItem("vote", vote);
-
-    document.getElementById("likeCount").innerText = likeCount;
-};
-
-/* ===== DISLIKE ===== */
-document.getElementById("dislikeBtn").onclick = ()=>{
-
-    if(vote === "dislike"){
-        return alert("You already disliked!");
-    }
-
-    if(vote === "like"){
-        return alert("You already liked! Press Reset to change.");
-    }
-
-    dislikeCount++;
-    localStorage.setItem("dislike", dislikeCount);
-
-    vote = "dislike";
-    localStorage.setItem("vote", vote);
-
-    document.getElementById("dislikeCount").innerText = dislikeCount;
-};
-
-/* ===== COMMENT ===== */
-document.getElementById("commentBtn").onclick = ()=>{
-    let text = document.getElementById("commentInput").value;
-
-    if(text.trim() === "") return alert("Write something!");
-
-    let newComment = {
-        text: text,
-        time: new Date().toLocaleString()
-    };
-
-    comments.push(newComment);
-    localStorage.setItem("comments", JSON.stringify(comments));
-
-    document.getElementById("commentInput").value = "";
-    renderComments();
-};
-
-/* ===== RESET ===== */
-document.getElementById("resetBtn").onclick = ()=>{
-    localStorage.clear();
-
-    likeCount = 0;
-    dislikeCount = 0;
-    comments = [];
-    vote = null;
-
-    document.getElementById("likeCount").innerText = 0;
-    document.getElementById("dislikeCount").innerText = 0;
-
-    renderComments();
-
-    alert("Reset done!");
-};
-
+});
 </script>
-
+<a href="index.html">⬅ Back to Portfolio</a>
 </body>
 </html>
