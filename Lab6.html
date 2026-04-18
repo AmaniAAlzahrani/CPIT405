@@ -24,10 +24,6 @@ body{
     text-align:center;
 }
 
-h2{
-    margin-bottom:20px;
-}
-
 .buttons{
     display:flex;
     justify-content:center;
@@ -66,7 +62,7 @@ button:hover{
 .input-area{
     display:flex;
     gap:10px;
-    margin-top:20px;
+    margin-top:10px;
 }
 
 input{
@@ -82,7 +78,7 @@ input{
 }
 
 #comments{
-    margin-top:20px;
+    margin-top:10px;
     text-align:left;
 }
 
@@ -92,6 +88,19 @@ input{
     border-radius:10px;
     margin-top:10px;
     font-size:14px;
+}
+
+.back-link{
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    text-decoration: none;
+    color: #4f46e5;
+    font-weight: bold;
+}
+
+.back-link:hover{
+    text-decoration: underline;
 }
 </style>
 </head>
@@ -107,18 +116,20 @@ input{
     <button id="dislikeBtn">👎 <span id="dislikeCount">0</span></button>
 </div>
 
+<h3 style="margin-top:20px;">Comments</h3>
+
 <div class="input-area">
     <input type="text" id="commentInput" placeholder="Write a comment...">
-    <button id="commentBtn">Send</button>
+    <button id="commentBtn" type="button">Send</button>
 </div>
+
+<div id="comments"></div>
 
 <button id="resetBtn">Reset</button>
 
-<div id="comments">
-    <h3>Comments</h3>
 </div>
 
-</div>
+<a href="index.html" class="back-link">⬅ Back to Portfolio</a>
 
 <script>
 
@@ -126,15 +137,16 @@ input{
 let likeCount = parseInt(localStorage.getItem("like")) || 0;
 let dislikeCount = parseInt(localStorage.getItem("dislike")) || 0;
 let comments = JSON.parse(localStorage.getItem("comments")) || [];
-let voted = localStorage.getItem("voted"); // منع السبام
+let vote = localStorage.getItem("vote"); // like / dislike
 
 /* ===== INIT ===== */
 document.getElementById("likeCount").innerText = likeCount;
 document.getElementById("dislikeCount").innerText = dislikeCount;
 
+/* ===== RENDER COMMENTS ===== */
 function renderComments(){
     const box = document.getElementById("comments");
-    box.innerHTML = "<h3>Comments</h3>";
+    box.innerHTML = "";
 
     comments.forEach(c=>{
         let div = document.createElement("div");
@@ -148,22 +160,40 @@ renderComments();
 
 /* ===== LIKE ===== */
 document.getElementById("likeBtn").onclick = ()=>{
-    if(voted) return alert("You already voted!");
+
+    if(vote === "like"){
+        return alert("You already liked!");
+    }
+
+    if(vote === "dislike"){
+        return alert("You already disliked! Press Reset to change.");
+    }
 
     likeCount++;
     localStorage.setItem("like", likeCount);
-    localStorage.setItem("voted", "yes");
+
+    vote = "like";
+    localStorage.setItem("vote", vote);
 
     document.getElementById("likeCount").innerText = likeCount;
 };
 
 /* ===== DISLIKE ===== */
 document.getElementById("dislikeBtn").onclick = ()=>{
-    if(voted) return alert("You already voted!");
+
+    if(vote === "dislike"){
+        return alert("You already disliked!");
+    }
+
+    if(vote === "like"){
+        return alert("You already liked! Press Reset to change.");
+    }
 
     dislikeCount++;
     localStorage.setItem("dislike", dislikeCount);
-    localStorage.setItem("voted", "yes");
+
+    vote = "dislike";
+    localStorage.setItem("vote", vote);
 
     document.getElementById("dislikeCount").innerText = dislikeCount;
 };
@@ -193,6 +223,7 @@ document.getElementById("resetBtn").onclick = ()=>{
     likeCount = 0;
     dislikeCount = 0;
     comments = [];
+    vote = null;
 
     document.getElementById("likeCount").innerText = 0;
     document.getElementById("dislikeCount").innerText = 0;
