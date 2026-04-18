@@ -43,14 +43,27 @@ button:hover{
     transform:scale(1.05);
 }
 
+button:disabled{
+    opacity:0.6;
+    cursor:not-allowed;
+}
+
+.active-like{
+    background:#22c55e !important;
+    color:white !important;
+}
+
+.active-dislike{
+    background:#ef4444 !important;
+    color:white !important;
+}
+
 #likeBtn{
     background:#dcfce7;
-    color:#166534;
 }
 
 #dislikeBtn{
     background:#fee2e2;
-    color:#991b1b;
 }
 
 #resetBtn{
@@ -98,10 +111,6 @@ input{
     color: #4f46e5;
     font-weight: bold;
 }
-
-.back-link:hover{
-    text-decoration: underline;
-}
 </style>
 </head>
 
@@ -137,18 +146,34 @@ input{
 let likeCount = parseInt(localStorage.getItem("like")) || 0;
 let dislikeCount = parseInt(localStorage.getItem("dislike")) || 0;
 let comments = JSON.parse(localStorage.getItem("comments")) || [];
-let vote = localStorage.getItem("vote"); // like / dislike
+let vote = localStorage.getItem("vote");
 
 /* ===== INIT ===== */
+const likeBtn = document.getElementById("likeBtn");
+const dislikeBtn = document.getElementById("dislikeBtn");
+
 document.getElementById("likeCount").innerText = likeCount;
 document.getElementById("dislikeCount").innerText = dislikeCount;
 
-/* ===== RENDER COMMENTS ===== */
+/* ===== APPLY SAVED STATE ===== */
+if(vote === "like"){
+    likeBtn.classList.add("active-like");
+    likeBtn.disabled = true;
+    dislikeBtn.disabled = true;
+}
+
+if(vote === "dislike"){
+    dislikeBtn.classList.add("active-dislike");
+    likeBtn.disabled = true;
+    dislikeBtn.disabled = true;
+}
+
+/* ===== COMMENTS ===== */
 function renderComments(){
     const box = document.getElementById("comments");
     box.innerHTML = "";
 
-    comments.forEach(c=>{
+    comments.slice().reverse().forEach(c=>{
         let div = document.createElement("div");
         div.className = "comment-box";
         div.innerHTML = `<b>${c.text}</b><br><small>${c.time}</small>`;
@@ -159,15 +184,8 @@ function renderComments(){
 renderComments();
 
 /* ===== LIKE ===== */
-document.getElementById("likeBtn").onclick = ()=>{
-
-    if(vote === "like"){
-        return alert("You already liked!");
-    }
-
-    if(vote === "dislike"){
-        return alert("You already disliked! Press Reset to change.");
-    }
+likeBtn.onclick = ()=>{
+    if(vote) return;
 
     likeCount++;
     localStorage.setItem("like", likeCount);
@@ -175,25 +193,26 @@ document.getElementById("likeBtn").onclick = ()=>{
     vote = "like";
     localStorage.setItem("vote", vote);
 
+    likeBtn.classList.add("active-like");
+    likeBtn.disabled = true;
+    dislikeBtn.disabled = true;
+
     document.getElementById("likeCount").innerText = likeCount;
 };
 
 /* ===== DISLIKE ===== */
-document.getElementById("dislikeBtn").onclick = ()=>{
-
-    if(vote === "dislike"){
-        return alert("You already disliked!");
-    }
-
-    if(vote === "like"){
-        return alert("You already liked! Press Reset to change.");
-    }
+dislikeBtn.onclick = ()=>{
+    if(vote) return;
 
     dislikeCount++;
     localStorage.setItem("dislike", dislikeCount);
 
     vote = "dislike";
     localStorage.setItem("vote", vote);
+
+    dislikeBtn.classList.add("active-dislike");
+    likeBtn.disabled = true;
+    dislikeBtn.disabled = true;
 
     document.getElementById("dislikeCount").innerText = dislikeCount;
 };
@@ -220,17 +239,7 @@ document.getElementById("commentBtn").onclick = ()=>{
 document.getElementById("resetBtn").onclick = ()=>{
     localStorage.clear();
 
-    likeCount = 0;
-    dislikeCount = 0;
-    comments = [];
-    vote = null;
-
-    document.getElementById("likeCount").innerText = 0;
-    document.getElementById("dislikeCount").innerText = 0;
-
-    renderComments();
-
-    alert("Reset done!");
+    location.reload(); // أسهل طريقة يرجع كل شيء
 };
 
 </script>
