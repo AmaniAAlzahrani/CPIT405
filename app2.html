@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Country Explorer</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+<nav>
+<img src="profile.jpg" class="profile-pic">
+<ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="myworks.html">My Works</a></li>
+</ul>
+</nav>
+</header>
+
+<main>
+
+<h2>Country Explorer</h2>
+
+<input type="text" id="search" placeholder="Enter country">
+<button onclick="searchCountry()">Search</button>
+
+<div id="result"></div>
+
+</main>
+
+<script>
+async function searchCountry(){
+    const name = document.getElementById("search").value.trim();
+    const result = document.getElementById("result");
+
+    if(name === ""){
+        result.innerHTML = "⚠️ Please enter a country name";
+        return;
+    }
+
+    result.innerHTML = `<div class="loader"></div>`;
+
+    try{
+        const res = await fetch(`https://restcountries.com/v3.1/name/${name}`);
+
+        if(!res.ok){
+            throw new Error("Not found");
+        }
+
+        const data = await res.json();
+
+        result.innerHTML = "";
+
+        data.slice(0,5).forEach(c=>{
+            const capital = c.capital ? c.capital[0] : "N/A";
+            const flag = c.flags?.png || "";
+
+            result.innerHTML += `
+            <div class="country-card">
+                <img src="${flag}" class="flag">
+                <h3>${c.name.common}</h3>
+                <p>🌍 Region: ${c.region}</p>
+                <p>🏙 Capital: ${capital}</p>
+            </div>
+            `;
+        });
+
+    }catch(err){
+        result.innerHTML = "❌ Country not found";
+    }
+}
+</script>
+
+</body>
+</html>

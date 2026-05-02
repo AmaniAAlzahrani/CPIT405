@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+
+
+</head>
+
+
+
+<body>
+
+
+
+
+
+<script>
+
+let person = {
+  firstName: "Ali",
+  lastName: "Ahmed",
+  age: 21,
+  isEnrolled: true,
+  greet: function() {
+    console.log("Hello, my name is " + this.firstName + " " + this.lastName);
+  },
+};
+console.log(typeof person) // object
+console.log("First Name: ", person.firstName, typeof person.firstName);
+console.log("Age: ", person.age, typeof person.age)
+console.log("Is enrolled:", isEnrolled, typeof person.isEnrolled);
+person.greet();
+console.log(typeof person.greet)
+
+</script>
+
+
+
+</body>
+
+</html>
